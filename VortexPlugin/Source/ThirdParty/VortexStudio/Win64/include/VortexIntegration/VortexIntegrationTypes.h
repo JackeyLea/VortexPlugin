@@ -924,7 +924,7 @@ extern "C" {
         /// Number of heights along x axis
         ///
         uint32_t numHeightsX;
-        
+
         /// Number of heights along y axis
         ///
         uint32_t numHeightsY;
@@ -991,7 +991,116 @@ extern "C" {
 
     }StreamedSphere;
 
+    typedef struct StreamedCapsule
+    {
+        /// Unique Id of the object for reference
+        ///
+        int uniqueID;
+
+        /// Material index applied to entire capsule
+        ///
+        int materialIndex;
+
+        /// World-space translation of the capsule
+        ///
+        double translation[3];
+
+        /// World-space rotation of the capsule
+        ///
+        double rotationQuaternion[4];
+
+        /// Capsule radius
+        ///
+        double radius;
+
+        /// Capsule cylinder length
+        ///
+        double cylinderLength;
+
+    }StreamedCapsule;
+
+    typedef struct StreamedMesh
+    {
+        /// Unique Id of the object for reference
+        ///
+        int uniqueID;
+
+        /// Material index applied to the mesh
+        ///
+        int materialIndex;
+
+        /// World-space translation of the mesh
+        ///
+        double translation[3];
+
+        /// World-space rotation of the mesh
+        ///
+        double rotationQuaternion[4];
+
+        /// Array of mesh vertices
+        ///
+        double* vertices;
+
+        /// Number of mesh vertices
+        ///
+        uint32_t vertexCount;
+
+        /// Array of triangle indices
+        ///
+        int* indices;
+
+        /// Number of mesh triangles
+        ///
+        uint32_t triangleCount;
+
+    }StreamedMesh;
+
+    typedef struct StreamedConvexMesh
+    {
+        /// Unique Id of the object for reference
+        ///
+        int uniqueID;
+
+        /// Material index applied to the convex mesh
+        ///
+        int materialIndex;
+
+        /// World-space translation of the  convex mesh
+        ///
+        double translation[3];
+
+        /// World-space rotation of the convex mesh
+        ///
+        double rotationQuaternion[4];
+
+        /// Array of mesh vertices (3 doubles per vertex)
+        /// 
+        double* vertices;
+
+        /// Vertex count
+        ///
+        uint32_t vertexCount;
+
+    }StreamedConvexMesh;
+
+    // information required to instantiate tile system
+    // tileSize contains the x, y extent of a tile 
+    // translation contains the x, y coordinates of the terrain origin
+    typedef struct TerrainComponentInfo
+    {
+        double tileSize[2];
+        double translation[2];
+    } TerrainComponentInfo;
+
+    // terrainComponentInfoPtr is an array of size terrainComponentCount
+    typedef struct TerrainComponentInfoResponse
+    {
+        TerrainComponentInfo* terrainComponentInfoPtr;
+        uint32_t terrainComponentCount;
+    } TerrainComponentInfoResponse;
+
     /// Terrain response structure contains an array of StreamedTerrainHeightField and the array size is heightFieldCount
+    /// It also contains arrays of static colliders along with their associated array size.
     ///
     typedef struct StreamedTerrainResponse
     {
@@ -1019,7 +1128,44 @@ extern "C" {
         ///
         uint32_t sphereCount;
 
+        /// Array of Streamed Capsules
+        ///
+        StreamedCapsule* capsules;
+
+        /// Capsule array size
+        ///
+        uint32_t capsuleCount;
+
+        /// Array of Streamed Triangle Meshes
+        ///
+        StreamedMesh* meshes;
+
+        /// Triangle mesh array size
+        ///
+        uint32_t meshCount;
+
+        /// Array of convex meshes
+        ///
+        StreamedConvexMesh* convexMeshes;
+
+        /// Convex mesh array size
+        ///
+        uint32_t convexMeshCount;
+
     } StreamedTerrainResponse;
+
+    /// Streamed Terrain Preloaded mesh response structure contains an array of StreamedMesh along with the size of the array.
+    ///
+    typedef struct  StreamedTerrainPreloadMeshResponse
+    {
+        /// Array of Streamed Triangle Meshes
+        ///
+        StreamedMesh* meshes;
+
+        /// Triangle mesh array size
+        ///
+        uint32_t meshCount;
+    } StreamedTerrainPreloadMeshResponse;
 
     typedef struct MaterialTableInfo
     {
@@ -1035,6 +1181,210 @@ extern "C" {
         ///
         const char* materialNames;
     } MaterialTableInfo;
+
+
+    typedef struct VortexTransform
+    {
+        /// World-space translation of the object
+        ///
+        double translation[3];
+        /// World-space rotation of the object
+        ///
+        double rotationQuaternion[4];
+    }VortexTransform;
+
+    typedef struct VortexGeneralizedVelocity
+    {
+        /// World-space linear velocity of the object
+        ///
+        double linearVelocity[3];
+        /// World-space angular velocity of the object
+        /// 
+        double angularVelocity[3];
+    }VortexGeneralizedVelocity;
+
+    typedef struct VortexKinematics
+    {
+        VortexTransform transform;
+        VortexGeneralizedVelocity generalizedVelocity;
+    }VortexKinematics;
+
+    typedef struct VortexBoxCG
+    {
+        /// Unique Id of the object for reference
+        ///
+        int uniqueID;
+        /// Material index applied to entire Box
+        ///
+        int materialIndex;
+        /// Box sizes
+        ///
+        double size[3];
+    }VortexBoxCG;
+
+    typedef struct VortexSphereCG
+    {
+        /// Unique Id of the object for reference
+        ///
+        int uniqueID;
+        /// Material index applied to entire sphere
+        ///
+        int materialIndex;
+        /// Sphere radius
+        ///
+        double radius;
+    }VortexSphereCG;
+
+    typedef struct VortexCapsuleCG
+    {
+        /// Unique Id of the object for reference
+        ///
+        int uniqueID;
+        /// Material index applied to entire capsule
+        ///
+        int materialIndex;
+        /// Capsule radius
+        ///
+        double radius;
+        /// Capsule cylinder length
+        ///
+        double cylinderLength;
+    }VortexCapsuleCG;
+
+    typedef struct VortexMeshCG
+    {
+        /// Unique Id of the object for reference
+        ///
+        int uniqueID;
+        /// Material index applied to entire mesh
+        ///
+        int materialIndex;
+        /// Array of mesh vertices
+        ///
+        double* vertices;
+        /// Array of triangle indices
+        ///
+        int* indices;
+        /// Number of mesh vertices
+        ///
+        uint32_t vertexCount;
+        /// Number of mesh triangles
+        ///
+        uint32_t triangleCount;
+    }VortexMeshCG;
+
+    typedef struct VortexConvexMeshCG
+    {
+        /// Unique Id of the object for reference
+        ///
+        int uniqueID;
+        /// Material index applied to entire convex mesh
+        ///
+        int materialIndex;
+        /// Array of mesh vertices
+        ///
+        double* vertices;
+        /// Number of mesh vertices
+        ///
+        uint32_t vertexCount;
+    }VortexConvexMeshCG;
+
+    typedef struct VortexKinematicBox
+    {
+        /// the boxCG of the box
+        ///
+        VortexBoxCG geometry;
+        /// the kinematics of the box
+        ///
+        VortexKinematics kinematics;
+    }VortexKinematicBox;
+        
+    typedef struct VortexKinematicSphere
+    {
+        /// the SphereCG of the sphere
+        ///
+        VortexSphereCG geometry;
+        /// the kinematics of the sphere
+        ///
+        VortexKinematics kinematics;
+    }VortexKinematicSphere;
+
+    typedef struct VortexKinematicCapsule
+    {
+        /// the CapsuleCG of the capsule
+        ///
+        VortexCapsuleCG geometry;
+        /// the kinematics of the capsule
+        ///
+        VortexKinematics kinematics;
+
+    }VortexKinematicCapsule;
+
+    typedef struct VortexKinematicMesh
+    {
+        /// the MeshCG of the mesh
+        ///
+        VortexMeshCG geometry;
+        /// the kinematics of the mesh
+        ///
+        VortexKinematics kinematics;
+    }VortexKinematicMesh;
+
+    typedef struct VortexKinematicConvexMesh
+    {
+        /// the ConvexMeshCG of the convex mesh
+        ///
+        VortexConvexMeshCG geometry;
+        /// the kinematics of the convex mesh
+        ///
+        VortexKinematics kinematics;
+    }VortexKinematicConvexMesh;
+
+    /// Kinematic response structure contains an array of colliders along with their associated array size.
+    ///
+    typedef struct StreamedKinematicsResponse
+    {
+        /// Array of Kinematic Boxes
+        ///
+        VortexKinematicBox* boxes;
+
+        /// Box array size
+        ///
+        uint32_t boxCount;
+
+        /// Array of Kinematic Spheres
+        ///
+        VortexKinematicSphere* spheres;
+
+        /// Sphere array size
+        ///
+        uint32_t sphereCount;
+
+        /// Array of Kinematic Capsules
+        ///
+        VortexKinematicCapsule* capsules;
+
+        /// Capsule array size
+        ///
+        uint32_t capsuleCount;
+
+        /// Array of Kinematic Triangle Meshes
+        ///
+        VortexKinematicMesh* meshes;
+
+        /// Triangle mesh array size
+        ///
+        uint32_t meshCount;
+
+        /// Array of kinematic convex meshes
+        ///
+        VortexKinematicConvexMesh* convexMeshes;
+
+        /// Convex mesh array size
+        ///
+        uint32_t convexMeshCount;
+
+    } StreamedKinematicsResponse;
 
     /// Callback for receiving the additional plugins directory
     ///
